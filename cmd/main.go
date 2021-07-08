@@ -14,11 +14,11 @@ func main() {
 	}
 
 	db, err := repository.NewMysqlDB(repository.Config{
-		Host:     "db",
-		Port:     "3306",
-		Username: "root",
-		Password: "root",
-		DBName:   "ambassador",
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.user"),
+		Password: viper.GetString("db.pass"),
+		DBName:   viper.GetString("db.dbname"),
 	})
 
 	if err != nil {
@@ -33,7 +33,7 @@ func main() {
 		return c.SendString("Hello, World 👋!")
 	})
 
-	app.Listen(":3000")
+	app.Listen(viper.GetString("port"))
 }
 
 func initConfigs() error {
