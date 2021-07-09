@@ -7,17 +7,32 @@ services:
         volumes: 
             - .:/app
         depends_on: 
-            - db
-    db:
-        image: mysql:5.7.22
-        restart: always
-        environment: 
-            MYSQL_DATABASE: ambassador
-            MYSQL_USER: root
-            MYSQL_PASSWORD: root
-            MYSQL_ROOT_PASSWORD: root
-        volumes: 
-            - .dbdata:/var/lib/mysql
-        ports: 
-            - 33066:3306
-        
+            - postgres
+        networks: 
+            - default
+    postgres:
+        image: postgres
+        environment:
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "changeme"
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "5432:5432"
+        restart: unless-stopped
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+            PGADMIN_CONFIG_SERVER_MODE: 'False'
+        volumes:
+               - pgadmin:/root/.pgadmin
+        ports:
+            - "${PGADMIN_PORT:-5050}:80"
+        restart: unless-stopped
+volumes:
+    postgres:
+    pgadmin:
+    backend:

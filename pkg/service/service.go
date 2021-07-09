@@ -1,4 +1,4 @@
-package repository
+package service
 
 import (
 	"github.com/fungerouscode/go-ambassador/pkg/repository"
