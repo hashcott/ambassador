@@ -9,4 +9,5 @@ RUN go mod download
 
 COPY . .
 
-CMD ["go", "run", "./cmd/main.go"]
+RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+CMD ["air", "-c", ".air.toml"]
