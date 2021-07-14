@@ -24,9 +24,12 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
-
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
+	}
+
+	if err := repository.AutoMigrate(db); err != nil {
+		logrus.Fatalf("failed to migrate db: %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)

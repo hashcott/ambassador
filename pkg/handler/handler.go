@@ -18,7 +18,8 @@ func (h *Handler) InitRoutes(app *fiber.App) {
 
 	v1 := api.Group("v1")
 
+	// Admin router
 	admin := v1.Group("auth")
-
 	admin.Post("register", h.Register)
+	admin.Post("login", h.Login)
 }

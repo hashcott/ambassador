@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/fungerouscode/go-ambassador/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,4 +25,8 @@ func NewMysqlDB(cfg Config) (*gorm.DB, error) {
 		log.Fatalf("Could not connect with database:  %s", err.Error())
 	}
 	return db, nil
+}
+
+func AutoMigrate(db *gorm.DB) error {
+	return db.AutoMigrate(models.User{})
 }
