@@ -22,6 +22,9 @@ func (h *Handler) InitRoutes(app *fiber.App) {
 	admin := v1.Group("auth")
 	admin.Post("register", h.Register)
 	admin.Post("login", h.Login)
-	admin.Get("user", h.GetUser)
-	admin.Get("logout", h.Logout)
+
+	// Authenticated
+	adminAuthenticated := admin.Use(h.IsAuthenticated)
+	adminAuthenticated.Get("user", h.GetUser)
+	adminAuthenticated.Get("logout", h.Logout)
 }

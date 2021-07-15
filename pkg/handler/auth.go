@@ -73,9 +73,8 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 }
 
 func (h *Handler) GetUser(c *fiber.Ctx) error {
-	cookie := c.Cookies("jwt")
-	if userId, err := h.services.ParserToken(cookie); err != nil {
-		c.Status(fiber.StatusUnauthorized)
+	if userId, err := getUserId(c); err != nil {
+		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{
 			"message": err.Error(),
 		})
