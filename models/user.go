@@ -1,10 +1,10 @@
 package models
 
 type User struct {
-	Id           uint
-	FirstName    string
-	LastName     string
-	Email        string
-	Password     string
-	IsAmbassador bool
+	Id           uint   `json:"id"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Email        string `json:"email"`
+	Password     string `json:"-"`
+	IsAmbassador bool   `json:"-"`
 }

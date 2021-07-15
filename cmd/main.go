@@ -6,6 +6,7 @@ import (
 	"github.com/fungerouscode/go-ambassador/pkg/service"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -36,7 +37,9 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 	app := fiber.New()
-
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 	handlers.InitRoutes(app)
 
 	app.Listen(viper.GetString("port"))

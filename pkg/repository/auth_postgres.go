@@ -32,11 +32,20 @@ func (r *AuthPostgres) GetUser(email string, password string) (models.User, erro
 	var user models.User
 	chain := r.db.Where("email = ? ", email).First(&user)
 	if user.Id == 0 {
-		return user, errors.New("User not found")
+		return user, errors.New("user not found")
 	}
 	chain.Where("password", password).First(&user)
 	if user.Id == 0 {
-		return user, errors.New("Password incorrect")
+		return user, errors.New("password incorrect")
+	}
+	return user, nil
+}
+
+func (r *AuthPostgres) GetUserById(userID uint) (models.User, error) {
+	var user models.User
+	r.db.Where("id = ? ", userID).First(&user)
+	if user.Id == 0 {
+		return user, errors.New("user not found")
 	}
 	return user, nil
 }

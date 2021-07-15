@@ -1,15 +1,17 @@
 package handler
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 type registerInput struct {
-	FirstName    string `json:"firstName" binding:"required"`
-	LastName     string `json:"lastName" binding:"required"`
+	FirstName    string `json:"first_name" binding:"required"`
+	LastName     string `json:"last_name" binding:"required"`
 	Email        string `json:"email" binding:"required"`
 	Password     string `json:"password" binding:"required"`
-	PasswordConf string `json:"passwordConf" binding:"required"`
+	PasswordConf string `json:"password_conf" binding:"required"`
 }
 
 func (h *Handler) Register(c *fiber.Ctx) error {
@@ -53,6 +55,32 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	} else {
+		cookie := fiber.Cookie{
+			Name:     "jwt",
+			Value:    token,
+			Expires:  time.Now().Add(time.Hour * 12),
+			HTTPOnly: true,
+		}
+		c.Cookie(&cookie)
 		return c.JSON(token)
+	}
+}
+
+func (h *Handler) GetUser(c *fiber.Ctx) error {
+	cookie := c.Cookies("jwt")
+	if userId, err := h.services.ParserToken(cookie); err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	} else {
+		if user, err := h.services.GetUserById(userId); err != nil {
+			c.Status(fiber.StatusBadRequest)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		} else {
+			return c.JSON(user)
+		}
 	}
 }
