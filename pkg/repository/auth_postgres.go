@@ -24,18 +24,20 @@ func (r *AuthPostgres) CreateUser(firstName string, lastName string, email strin
 		IsAmbassador: false,
 	}
 
-	r.db.Create(&newUser)
+	if err := r.db.Create(&newUser).Error; err != nil {
+		return newUser, err
+	}
 
 	return newUser, nil
 }
 func (r *AuthPostgres) GetUser(email string, password string) (models.User, error) {
 	var user models.User
-	chain := r.db.Where("email = ? ", email).First(&user)
+	r.db.Where("email = ? ", email).First(&user)
 	if user.Id == 0 {
 		return user, errors.New("user not found")
 	}
-	chain.Where("password", password).First(&user)
-	if user.Id == 0 {
+
+	if user.Password != password {
 		return user, errors.New("password incorrect")
 	}
 	return user, nil

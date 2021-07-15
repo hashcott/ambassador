@@ -28,12 +28,18 @@ func (h *Handler) Register(c *fiber.Ctx) error {
 			"message": "password do not match",
 		})
 	}
-	user, _ := h.services.CreateUser(
+	if user, err := h.services.CreateUser(
 		input.FirstName,
 		input.LastName,
 		input.Email,
-		input.Password)
-	return c.JSON(user)
+		input.Password); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	} else {
+		return c.JSON(user)
+	}
 }
 
 type loginInput struct {
