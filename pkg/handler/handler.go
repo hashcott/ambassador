@@ -23,4 +23,5 @@ func (h *Handler) InitRoutes(app *fiber.App) {
 	admin.Post("register", h.Register)
 	admin.Post("login", h.Login)
 	admin.Get("user", h.GetUser)
+	admin.Get("logout", h.Logout)
 }
