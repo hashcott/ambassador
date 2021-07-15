@@ -102,3 +102,25 @@ func (h *Handler) Logout(c *fiber.Ctx) error {
 		"message": "success",
 	})
 }
+
+func (h *Handler) UpdateInfo(c *fiber.Ctx) error {
+	var input registerInput
+	if err := c.BodyParser(&input); err != nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	id, _ := getUserId(c)
+
+	if user, err := h.services.UpdateInfo(id, input.FirstName,
+		input.LastName,
+		input.Email); err != nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	} else {
+		return c.JSON(user)
+	}
+}

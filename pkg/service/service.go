@@ -10,6 +10,7 @@ type Authorization interface {
 	GenerateToken(email string, password string) (string, error)
 	GetUserById(userID uint) (models.User, error)
 	ParserToken(token string) (uint, error)
+	UpdateInfo(id uint, firstName string, lastName string, email string) (models.User, error)
 }
 
 type Service struct {

@@ -78,3 +78,7 @@ func (s *AuthService) ParserToken(token string) (uint, error) {
 	}
 
 }
+
+func (s *AuthService) UpdateInfo(id uint, firstName string, lastName string, email string) (models.User, error) {
+	return s.repo.UpdateInfo(id, firstName, lastName, email)
+}

@@ -51,3 +51,17 @@ func (r *AuthPostgres) GetUserById(userID uint) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (r *AuthPostgres) UpdateInfo(id uint, firstName string, lastName string, email string) (models.User, error) {
+	user := models.User{
+		Id:        id,
+		FirstName: firstName,
+		LastName:  lastName,
+		Email:     email,
+	}
+	if err := r.db.Model(&user).Updates(&user).Error; err != nil {
+		return user, err
+	} else {
+		return user, nil
+	}
+}
