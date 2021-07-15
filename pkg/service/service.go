@@ -11,6 +11,7 @@ type Authorization interface {
 	GetUserById(userID uint) (models.User, error)
 	ParserToken(token string) (uint, error)
 	UpdateInfo(id uint, firstName string, lastName string, email string) (models.User, error)
+	UpdatePassword(id uint, OldPassword string, newPassword string) error
 }
 
 type Service struct {

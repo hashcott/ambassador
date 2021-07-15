@@ -28,5 +28,6 @@ func (h *Handler) InitRoutes(app *fiber.App) {
 	adminAuthenticated.Get("user", h.GetUser)
 	adminAuthenticated.Get("logout", h.Logout)
 	adminAuthenticated.Put("user/info", h.UpdateInfo)
+	adminAuthenticated.Put("user/password", h.UpdatePassword)
 
 }

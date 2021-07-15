@@ -124,3 +124,47 @@ func (h *Handler) UpdateInfo(c *fiber.Ctx) error {
 		return c.JSON(user)
 	}
 }
+
+type updatePasswordInput struct {
+	OldPassword  string `json:"old_password" binding:"required"`
+	Password     string `json:"password" binding:"required"`
+	PasswordConf string `json:"password_conf" binding:"required"`
+}
+
+func (h *Handler) UpdatePassword(c *fiber.Ctx) error {
+	var input updatePasswordInput
+
+	if err := c.BodyParser(&input); err != nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if input.Password != input.PasswordConf {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": "password do not match",
+		})
+	}
+	id, _ := getUserId(c)
+
+	if err := h.services.UpdatePassword(id, input.OldPassword,
+		input.Password); err != nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	} else {
+		cookie := fiber.Cookie{
+			Name:     "jwt",
+			Value:    "",
+			Expires:  time.Now().Add(-time.Hour),
+			HTTPOnly: true,
+		}
+		c.Cookie(&cookie)
+		return c.JSON(fiber.Map{
+			"message": "changed password successfully, please log in again",
+		})
+	}
+}

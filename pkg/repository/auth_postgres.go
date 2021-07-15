@@ -65,3 +65,14 @@ func (r *AuthPostgres) UpdateInfo(id uint, firstName string, lastName string, em
 		return user, nil
 	}
 }
+func (r *AuthPostgres) UpdatePassword(id uint, newPassword string) error {
+	user := models.User{
+		Id:       id,
+		Password: newPassword,
+	}
+	if err := r.db.Model(&user).Updates(&user).Error; err != nil {
+		return err
+	} else {
+		return nil
+	}
+}

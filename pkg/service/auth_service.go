@@ -82,3 +82,15 @@ func (s *AuthService) ParserToken(token string) (uint, error) {
 func (s *AuthService) UpdateInfo(id uint, firstName string, lastName string, email string) (models.User, error) {
 	return s.repo.UpdateInfo(id, firstName, lastName, email)
 }
+
+func (s *AuthService) UpdatePassword(id uint, OldPassword string, newPassword string) error {
+	if user, err := s.repo.GetUserById(id); err != nil {
+		return err
+	} else {
+		if user.Password == generatePasswordHash(OldPassword) {
+			return s.repo.UpdatePassword(id, generatePasswordHash(newPassword))
+		} else {
+			return errors.New("current password incorrect")
+		}
+	}
+}
